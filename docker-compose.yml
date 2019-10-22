@@ -1,0 +1,59 @@
+version: '3'
+services:
+ mongodb:
+   image: mongo:latest
+   depends_on:
+      - zuul 
+   ports:
+     - 27018:27017
+   expose:
+      - 27018
+   container_name: mongoContainer
+   environment:
+      - MONGO_INITDB_DATABASE=abcd
+
+ spring:
+   image: muzzix-app
+   build:
+     context: MuzzixApp
+     dockerfile: Dockerfile
+   restart: always
+   network_mode: host
+   depends_on:
+      - mongodb
+   container_name: spring-docker
+   ports:
+    - 8080:8080
+   expose:
+     - 8080
+ zuul:
+   image: zuul-server
+   build:
+      context: zuul
+      dockerfile: Dockerfile
+   restart: always
+   depends_on:
+      - config
+   container_name: zuul-docker
+   ports:
+      - 8081:8081
+   expose:
+      - 8081
+   network_mode: host
+
+ config:
+   image: config-server
+   build:
+      context: configServer
+      dockerfile: Dockerfile
+   restart: always
+   container_name: config-docker
+   ports:
+       - 8082:8082
+   expose:
+       - 8082          
+
+   
+  
+ 
+
