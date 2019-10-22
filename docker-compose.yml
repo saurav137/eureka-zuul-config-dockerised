@@ -48,10 +48,24 @@ services:
       dockerfile: Dockerfile
    restart: always
    container_name: config-docker
+   depends_on:
+      - demo 
    ports:
        - 8082:8082
    expose:
-       - 8082          
+       - 8082
+
+ demo:
+   image: eureka-server
+   build:
+      context: demo
+      dockerfile: Dockerfile
+   restart: always
+   container_name: eureka-docker
+   ports:
+       - 8083:8083
+   expose:
+       - 8083          
 
    
   
